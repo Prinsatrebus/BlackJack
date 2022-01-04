@@ -44,48 +44,6 @@ class Deck():
 
         return self.all_cards.pop(0)
 
-# card stack value calculating function
-
-def stack_value_calculate(dealer, player_one):
-
-    dealer_value = 0
-    player_one_value = 0
-
-
-    for x in dealer:
-        if x.rank == 'Ace':
-            if dealer_value + 10 < 21:
-                dealer_value += 10
-            else:
-                dealer_value += 1
-        dealer_value += x.value
-    
-    print('\n')
-    print(f'The dealer is at {dealer_value}')
-
-    for x in player_one:
-        if x.rank == 'Ace':
-            if player_one_value + 10 < 21:
-                player_one_value += 10
-            else:
-                player_one_value += 1
-        player_one_value += x.value
-    
-    print('\n')
-    print(f'Player One is at {player_one_value}')
-
-    if dealer_value == player_one_value:
-        print('Draw!')
-    elif dealer_value > player_one_value:
-        print("The dealer wins this round!")
-        player_one.cash -= 5
-        dealer.cash += 5
-    else:
-        print("Player One wins this round!")
-        dealer.cash -= 5
-        player_one.cash += 5
-        
-
 
 # Player class definition (TBD)
 
@@ -94,10 +52,47 @@ class Player():
     def __init__(self, name):
         self.name = name
         self.cash = 25
+        self.pool = 0
         self.all_cards = []
+        self.bust = False
+        self.value = 0
 
     def remove_all(self):
         
         for x in self.all_cards:
             self.all_cards.pop(0)
 
+    def value_calculator(self):
+        
+        for x in self.all_cards:
+            if x.rank == 'Ace':
+                if self.value + 11 < 21:
+                    self.value += 11
+                else:
+                    self.value += 1
+            self.value += x.value
+        if self.value > 21:
+            self.bust = True
+            
+    def value_clear(self):
+        
+        self.all_cards = []
+        self.value = 0
+        self.pool = 0
+        self.bust = False
+        
+    def hit_clear(self):
+        
+        self.value = 0
+        
+    def buy_in(self):
+        
+        self.cash -= 5
+        self.pool = 5
+        
+    def collect_winnings(self):
+        
+        self.cash += self.pool * 2 
+        
+    
+            
